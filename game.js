@@ -2,6 +2,7 @@ var buttonColours = ["red", "blue", "green" , "yellow"];
 
 var gamePattern= [];
 var userClickedPattern = [];
+var highScore = localStorage.getItem("simonHighScore") || 0;
  
 var level = 0;
 var started = false;
@@ -30,6 +31,10 @@ $(".btn").click(function() {
 function checkAnswer(currentLevel){
     if(gamePattern[currentLevel] === userClickedPattern[currentLevel]){
         if (userClickedPattern.length === gamePattern.length){
+           if (level > highScore) {
+                highScore = level;
+                localStorage.setItem("simonHighScore", highScore);
+            }
             setTimeout(function () {
               nextSequence();
             }, 1000);
@@ -42,7 +47,7 @@ function checkAnswer(currentLevel){
         $("#level-title").text("Game Over, Press Any Key to Restart");
         setTimeout(function () {
             $("body").removeClass("game-over");
-        }, 200);
+        }, 500);
         startOver();
     }
 }
@@ -50,7 +55,7 @@ function checkAnswer(currentLevel){
 function nextSequence(){
     userClickedPattern = [];
     level ++;
-    $("#level-title").text("Level "+level);
+    $("#level-title").html("Level " + level + "<br><span style='font-size: 1rem;'>Best Score: " + highScore + "</span>");
     var randomNumber = Math.floor(Math.random() * 4);
     var randomChosenColour = buttonColours[randomNumber];
     gamePattern.push(randomChosenColour);
